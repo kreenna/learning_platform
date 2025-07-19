@@ -12,6 +12,8 @@ django-phonenumber-field = "^8.1.0"
 djangorestframework = "^3.16.0"
 phonenumbers = "^9.0.10"
 pillow = "^11.3.0"
+dotenv = "^0.9.9"
+psycopg2 = "^2.9.10"
 
 
 [build-system]
