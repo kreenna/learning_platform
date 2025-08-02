@@ -43,7 +43,7 @@ class LessonListAPIView(ListAPIView):
 
     def get_queryset(self):
         user = self.request.user
-        if user.groups.filter(name="Модераторы").exists():
+        if user.groups.filter(name="managers").exists():
             return Lesson.objects.all()
         return Lesson.objects.filter(owner=user)
 
