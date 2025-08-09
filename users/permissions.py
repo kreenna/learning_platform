@@ -3,10 +3,14 @@ from rest_framework import permissions
 
 class IsModerator(permissions.BasePermission):
     def has_permission(self, request, view):
-        return bool(
-            request.user and request.user.is_authenticated and request.user.groups.filter(name="Модераторы").exists())
+        return request.user.groups.filter(name="managers").exists()
 
 
 class IsOwner(permissions.BasePermission):
     def has_object_permission(self, request, view, obj):
         return obj.owner == request.user
+
+
+class IsCreator(permissions.BasePermission):
+    def has_object_permission(self, request, view, obj):
+        return obj.creator == request.user
