@@ -2,8 +2,6 @@ from django.contrib.auth.models import AbstractUser
 from django.db import models
 from phonenumber_field.modelfields import PhoneNumberField
 
-from materials.models import Course, Lesson
-
 
 class CustomUser(AbstractUser):
     username = None
@@ -28,6 +26,8 @@ class Payment(models.Model):
 
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name="payments", verbose_name="Пользователь")
     purchased_at = models.DateTimeField(auto_now_add=True)
+
+    from materials.models import Course, Lesson
     course_purchased = models.ForeignKey(Course, on_delete=models.CASCADE, related_name="purchases",
                                          verbose_name="Приобретенный курс", null=True, blank=True)
     lesson_purchased = models.ForeignKey(Lesson, on_delete=models.CASCADE, related_name="purchases",
