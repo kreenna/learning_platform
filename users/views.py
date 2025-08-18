@@ -53,30 +53,13 @@ class PaymentViewSet(viewsets.ModelViewSet):
     @swagger_auto_schema(
         operation_description="Получить список платежей",
         manual_parameters=[
-            openapi.Parameter(
-                "course",
-                openapi.IN_QUERY,
-                description="ID курса",
-                type=openapi.TYPE_INTEGER,
-            ),
-            openapi.Parameter(
-                "lesson",
-                openapi.IN_QUERY,
-                description="ID урока",
-                type=openapi.TYPE_INTEGER,
-            ),
-            openapi.Parameter(
-                "payment_method",
-                openapi.IN_QUERY,
-                description="Метод оплаты (напр. 'cash', 'card')",
-                type=openapi.TYPE_STRING,
-            ),
-            openapi.Parameter(
-                "ordering",
-                openapi.IN_QUERY,
-                description="Сортировка по дате (напр. 'payment_date' или '-payment_date')",
-                type=openapi.TYPE_STRING,
-            ),
+            openapi.Parameter("course", openapi.IN_QUERY, description="ID курса", type=openapi.TYPE_INTEGER, ),
+            openapi.Parameter("lesson", openapi.IN_QUERY, description="ID урока", type=openapi.TYPE_INTEGER, ),
+            openapi.Parameter("payment_method", openapi.IN_QUERY, description="Метод оплаты (напр. 'cash', 'card')",
+                              type=openapi.TYPE_STRING, ),
+            openapi.Parameter("ordering", openapi.IN_QUERY,
+                              description="Сортировка по дате (напр. 'payment_date' или '-payment_date')",
+                              type=openapi.TYPE_STRING, ),
         ],
     )
     def list(self, request, *args, **kwargs):
