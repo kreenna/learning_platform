@@ -55,10 +55,10 @@ class PaymentViewSet(viewsets.ModelViewSet):
         manual_parameters=[
             openapi.Parameter("course", openapi.IN_QUERY, description="ID курса", type=openapi.TYPE_INTEGER, ),
             openapi.Parameter("lesson", openapi.IN_QUERY, description="ID урока", type=openapi.TYPE_INTEGER, ),
-            openapi.Parameter("payment_method", openapi.IN_QUERY, description="Метод оплаты (напр. 'cash', 'card')",
+            openapi.Parameter("payment_method", openapi.IN_QUERY, description="Метод оплаты ('cash', 'card')",
                               type=openapi.TYPE_STRING, ),
             openapi.Parameter("ordering", openapi.IN_QUERY,
-                              description="Сортировка по дате (напр. 'payment_date' или '-payment_date')",
+                              description="Сортировка по дате ('payment_date' или '-payment_date')",
                               type=openapi.TYPE_STRING, ),
         ],
     )
@@ -87,7 +87,6 @@ class PaymentViewSet(viewsets.ModelViewSet):
 
 
 class CreateStripePaymentAPIView(APIView):
-    permission_classes = [IsAuthenticated]
 
     def post(self, request, *args, **kwargs):
         course_id = request.data.get("course_id")
@@ -99,12 +98,7 @@ class CreateStripePaymentAPIView(APIView):
         cancel_url = "http://127.0.0.1:8000/cancel/"
         payment_url = create_stripe_checkout_session(price_id, success_url, cancel_url)
 
-        payment = Payment.objects.create(
-            user=request.user,
-            course=course,
-            amount=course.price,
-            payment_method="card",
-            payment_url=payment_url,
-        )
+        payment = Payment.objects.create(user=request.user, course=course, amount=course.price, payment_method="card",
+                                         payment_url=payment_url, )
 
         return Response({"payment_url": payment_url, "payment_id": payment.id}, status=status.HTTP_201_CREATED)
