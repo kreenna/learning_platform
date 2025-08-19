@@ -46,16 +46,19 @@ class PaymentViewSet(viewsets.ModelViewSet):
     queryset = Payment.objects.all()
     serializer_class = PaymentSerializer
     filter_backends = [DjangoFilterBackend, filters.OrderingFilter]
-    filterset_fields = ["course", "lesson", "payment_method"]
+    filterset_fields = ["course_purchased", "lesson_purchased", "payment_method"]
     ordering_fields = ["payment_date"]
     ordering = ["-payment_date"]
 
     @swagger_auto_schema(
         operation_description="Получить список платежей",
         manual_parameters=[
-            openapi.Parameter("course", openapi.IN_QUERY, description="ID курса", type=openapi.TYPE_INTEGER, ),
-            openapi.Parameter("lesson", openapi.IN_QUERY, description="ID урока", type=openapi.TYPE_INTEGER, ),
-            openapi.Parameter("payment_method", openapi.IN_QUERY, description="Метод оплаты ('cash', 'card')",
+            openapi.Parameter("course_purchased", openapi.IN_QUERY, description="ID курса",
+                              type=openapi.TYPE_INTEGER, ),
+            openapi.Parameter("lesson_purchased", openapi.IN_QUERY, description="ID урока",
+                              type=openapi.TYPE_INTEGER, ),
+            openapi.Parameter("payment_method", openapi.IN_QUERY,
+                              description="Метод оплаты ('Наличные', 'Перевод на счет')",
                               type=openapi.TYPE_STRING, ),
             openapi.Parameter("ordering", openapi.IN_QUERY,
                               description="Сортировка по дате ('payment_date' или '-payment_date')",
@@ -98,7 +101,8 @@ class CreateStripePaymentAPIView(APIView):
         cancel_url = "http://127.0.0.1:8000/cancel/"
         payment_url = create_stripe_checkout_session(price_id, success_url, cancel_url)
 
-        payment = Payment.objects.create(user=request.user, course=course, amount=course.price, payment_method="card",
-                                         payment_url=payment_url, )
+        payment = Payment.objects.create(user=request.user, course_purchased=course, payment_sum=course.price,
+                                         payment_method="Перевод на счет",
+                                         link=payment_url, )
 
-        return Response({"payment_url": payment_url, "payment_id": payment.id}, status=status.HTTP_201_CREATED)
+        return Response({"link": payment_url, "payment_id": payment.id}, status=status.HTTP_201_CREATED)
