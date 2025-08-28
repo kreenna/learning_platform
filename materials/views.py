@@ -1,14 +1,16 @@
 from django.shortcuts import get_object_or_404
+from django.utils.timezone import now, timedelta
 from rest_framework import viewsets
 from rest_framework.generics import CreateAPIView, ListAPIView, RetrieveAPIView, UpdateAPIView, DestroyAPIView, \
     GenericAPIView
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
+from materials.services import send_course_update_email
 from users.permissions import IsCreator, IsModerator
 from .models import Course, Lesson, Subscription
-from .serializers import CourseSerializer, LessonSerializer
 from .paginators import MaterialsPagination
+from .serializers import CourseSerializer, LessonSerializer
 
 
 class CourseViewSet(viewsets.ModelViewSet):
@@ -26,6 +28,19 @@ class CourseViewSet(viewsets.ModelViewSet):
 
     def perform_create(self, serializer):
         serializer.save(creator=self.request.user)
+
+    def perform_update(self, serializer):
+        instance = serializer.save()
+
+        # получаем текущую дату и время
+        time_threshold = now() - timedelta(hours=4)
+
+        # проверяем, обновлялся ли курс более 4 часов назад
+        if instance.updated_at < time_threshold:
+            # получаем всех подписчиков курса
+            subscribers = instance.subscriptions.all().select_related("owner")
+            for subs in subscribers:
+                send_course_update_email.delay(subs.owner.email, instance.title)
 
     def get_permissions(self):
         if self.action in ["list", "retrieve", "update", "partial_update"]:

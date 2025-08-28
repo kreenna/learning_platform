@@ -9,6 +9,7 @@ class Course(models.Model):
     preview = models.ImageField(upload_to="previews/courses/", blank=True, null=True, verbose_name="Картинка")
     creator = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name="courses", verbose_name="Создатель")
     price = models.DecimalField(max_digits=10, decimal_places=2, default=0, verbose_name="Цена курса")
+    updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
         return self.title
@@ -46,4 +47,3 @@ class Subscription(models.Model):
 
     def __str__(self):
         return f"{self.owner.email} подписан на {self.course.title}"
-
