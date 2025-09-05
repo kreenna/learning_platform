@@ -21,8 +21,6 @@ RUN curl -O https://download.microsoft.com/download/e/4/e/e4e67866-dffd-428c-aac
 
 WORKDIR /app/
 
-RUN apk add --no-cache postgresql-dev
-
 COPY requirements.txt ./
 RUN pip install -r requirements.txt
 COPY . .
