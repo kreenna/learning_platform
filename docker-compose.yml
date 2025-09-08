@@ -1,0 +1,66 @@
+services:
+  backend:
+    container_name: backend
+    build: .
+    command: sh -c "gunicorn config.wsgi:application --bind 0.0.0.0:8000 --timeout 300 --workers $$(($$(nproc) * 2 + 1)) --log-level=debug"
+    ports:
+      - 8000:8000
+    restart: on-failure
+    extra_hosts:
+      - host.docker.internal:host-gateway
+
+  celery:
+    container_name: celery
+    build: .
+    command: sh -c "celery -A config.celery worker --loglevel=INFO -B"
+    restart: on-failure
+    depends_on:
+      - postbd
+    env_file: ".env"
+    environment:
+      PG_DB_HOST: postdb
+      CELERY_BROKER_URL: redis://redis:6379/0
+      CELERY_RESULT_BACKEND: redis://redis:6379/0
+
+  celery-beat:
+    container_name: celery-beat
+    build: .
+    command: celery -A config beat --loglevel=INFO --scheduler django_celery_beat.schedulers:DatabaseScheduler
+    env_file:
+      - .env
+    volumes:
+      - .:/app
+    depends_on:
+      - redis
+      - celery
+
+  redis:
+    container_name: redis
+    image: redis:7.4
+    restart: always
+    ports:
+      - "6379:6379"
+    env_file: ".env"
+    volumes:
+      - ./redis/data:/root/redis
+      - ./redis/conf/redis.conf:/usr/local/etc/redis/redis.conf
+
+  postbd:
+    container_name: postbd
+    image: postgres:15-alpine
+    env_file: ".env"
+    ports:
+      - "5432:5432"
+
+  nginx:
+    container_name: nginx
+    image: nginx:1.23.0-alpine
+    volumes:
+      - ./nginx/:/etc/nginx/conf.d/
+      - ./art/dist/:/app/
+    ports:
+      - 80:80
+      - 8080:8080
+    restart: on-failure
+    extra_hosts:
+      - host.docker.internal:host-gateway
