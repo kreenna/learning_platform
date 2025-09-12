@@ -2,6 +2,8 @@ from django.contrib.auth.models import AbstractUser
 from django.db import models
 from phonenumber_field.modelfields import PhoneNumberField
 
+from materials.models import Course, Lesson
+
 
 class CustomUser(AbstractUser):
     username = None
@@ -19,9 +21,6 @@ class CustomUser(AbstractUser):
     class Meta:
         verbose_name = "Пользователь"
         verbose_name_plural = "Пользователи"
-
-
-from materials.models import Course, Lesson
 
 
 class Payment(models.Model):

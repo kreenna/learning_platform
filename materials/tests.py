@@ -103,14 +103,14 @@ class LessonAPITests(BaseTestMixin, APITestCase):
         url = reverse("materials:lessons")
         response = self.client_mod.get(url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        lesson_ids = [l["id"] for l in response.data["results"]]
+        lesson_ids = [lesson["id"] for lesson in response.data["results"]]
         self.assertIn(self.lesson_user.id, lesson_ids)
 
     def test_lesson_list_regular_user(self):
         url = reverse("materials:lessons")
         response = self.client_user.get(url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        lesson_ids = [l["id"] for l in response.data["results"]]
+        lesson_ids = [lesson["id"] for lesson in response.data["results"]]
         self.assertIn(self.lesson_user.id, lesson_ids)
 
     def test_lesson_create_regular_user(self):
