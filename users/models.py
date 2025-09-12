@@ -26,7 +26,8 @@ class CustomUser(AbstractUser):
 class Payment(models.Model):
     PAYMENT_CHOICES = [("Наличные", "Наличные"), ("Перевод на счет", "Перевод на счет")]
 
-    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name="payments", verbose_name="Пользователь")
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name="payments",
+                             verbose_name="Пользователь")
     purchased_at = models.DateTimeField(auto_now_add=True)
 
     course_purchased = models.ForeignKey(Course, on_delete=models.CASCADE, related_name="purchases",
