@@ -1,6 +1,6 @@
 name: Django CI
 
-on: [ push, pull_request ]
+on: [ push ]
 
 jobs:
   lint:
@@ -104,7 +104,7 @@ jobs:
 
     steps:
       - name: Set up SSH
-        uses: webfactory/ssh-agent@v0.8.1
+        uses: webfactory/ssh-agent@v0.9.1
         with:
           ssh-private-key: ${{ secrets.SSH_KEY }}
 
