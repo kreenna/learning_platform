@@ -1,4 +1,4 @@
-# DRF с Docker Compose
+# Платформа для обучения
 
 Этот проект использует Docker и docker-compose для запуска всех сервисов (Django, база данных, Redis, Celery и т.д.).
 
