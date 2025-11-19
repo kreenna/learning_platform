@@ -26,8 +26,8 @@ sudo usermod -aG docker $USER
 ```
 ### 1. Клонировать репозиторий
 ```
-git clone https://github.com/your_username/your_project.git
-cd your_project
+git clone https://github.com/kreenna/learning_platform.git
+cd learning_platform
 ```
 ---
 
