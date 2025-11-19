@@ -73,7 +73,7 @@ http://localhost:8000/
 
 Проверьте логи:
 ```
-docker-compose logs db
+docker-compose logs postbd
 ```
 Вы должны видеть сообщения о запуске и отсутствии ошибок.
 
@@ -83,14 +83,14 @@ docker-compose logs db
 
 Проверьте, что контейнер запущен:
 ```
-docker-compose ps
+docker-compose redis
 ```
 
 В списке должен быть сервис `redis` со статусом `Up`.
 
 ---
 
-### Celery Worker
+### Celery
 
 Проверьте логи:
 ```
@@ -100,7 +100,7 @@ docker-compose logs celery
 
 ---
 
-### Celery Beat (если используется)
+### Celery Beat
 
 Проверьте логи:
 ```
